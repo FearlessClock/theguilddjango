@@ -1,4 +1,4 @@
-from TheGuild.workshop.Models.WorkshopModel import Workshop, Upgrade
+from TheGuild.core.Models.WorkshopModel import Workshop, Upgrade
 from rest_framework import serializers
 
 class WorkshopSerializer(serializers.ModelSerializer):

@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'TheGuild.workshop.apps.WorkshopConfig',
+    'TheGuild.core.apps.WorkshopConfig',
     'TheGuild.account.apps.AccountConfig',
 ]
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from ..Models.CountryModel import Country
 from ..Models.CharacterModel import Character
-from ..Serializers.serializer import CountrySerialzer, CharacterSerialzer
+from ..Serializers.core_serializer import CountrySerialzer, CharacterSerialzer
 from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpResponse

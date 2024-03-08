@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import UserLoginView, UserRegisterView, UserDeleteView, UserListView
+from .account_views import UserLoginView, UserRegisterView, UserDeleteView, UserListView
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

@@ -1,15 +1,12 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
-from TheGuild.core.Models.CountryModel import Country
 from TheGuild.core.Models.CharacterModel import Character
-from TheGuild.core.Models.EmployeeModel import Employee
 from TheGuild.core.Models.WorkshopModel import Workshop, Upgrade, Workshop_Upgrade
-from TheGuild.core.Serializers.core_serializer import CountrySerialzer, CharacterSerialzer
 from TheGuild.core.Serializers.WorkshopSerializer import WorkshopSerializer, UpgradeSerializer
-from TheGuild.core.Serializers.EmployeeSerializer import EmployeeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from TheGuild.core.GameManager import UpdateWorkshop
 
 
 class WorkshopListAllView(generics.ListCreateAPIView):
@@ -26,6 +23,8 @@ class WorkshopListByCountryView(generics.ListAPIView):
         if filter is not None:
             chars = Character.objects.filter(country_id=filter, user_id=user.id).values_list('id',  flat=True)
             queryset = Workshop.objects.filter(id__in=chars)
+            for workshop in queryset:
+                UpdateWorkshop(workshop)
             return queryset
         return None
     

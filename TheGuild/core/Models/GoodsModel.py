@@ -8,7 +8,8 @@ class Goods(models.Model):
     
 class Recipe(models.Model):
     name = models.CharField(max_length=200)
-    required_goods = models.ManyToManyField(Goods, through="Recipe_Goods", through_fields=("recipe", "goods"))
+    required_goods = models.ManyToManyField(Goods, related_name="+", through="Recipe_Goods", through_fields=("recipe", "goods"))
+    constructed_goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
     construction_ticks = models.IntegerField(default=20)
     
 class Recipe_Goods(models.Model):

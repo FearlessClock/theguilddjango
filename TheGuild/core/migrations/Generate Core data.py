@@ -66,17 +66,23 @@ def GenerateGoods(apps, schema_editor):
         Goods.objects.create(name="Stone", perlin_noise_seed=223, price_min=50,price_max=70)
     if(not Goods.objects.filter(name="Iron")):
         Goods.objects.create(name="Iron", perlin_noise_seed=524, price_min=10,price_max=20)
+    if(not Goods.objects.filter(name="Statue")):
+        Goods.objects.create(name="Statue", perlin_noise_seed=234, price_min=40,price_max=200)
+    if(not Goods.objects.filter(name="Sword")):
+        Goods.objects.create(name="Sword", perlin_noise_seed=222, price_min=60,price_max=110)
     
 def GenerateRecipes(apps, schema_editor):
     if(not Recipe.objects.filter(name="Statue")):
-        Recipe.objects.create(name="Statue")
+        Recipe.objects.create(name="Statue", construction_ticks=40, 
+                            constructed_goods=Goods.objects.get(id=4))
         recipe_goods_wood = Recipe_Goods.objects.create(
             recipe = Recipe.objects.get(id=1),
             goods = Goods.objects.get(id=1),
             amount_required = 2
         )
     if(not Recipe.objects.filter(name="Sword")):
-        Recipe.objects.create(name="Sword")
+        Recipe.objects.create(name="Sword", construction_ticks=32, 
+                            constructed_goods=Goods.objects.get(id=5))
         recipe_goods_stone = Recipe_Goods.objects.create(
             recipe = Recipe.objects.get(id=2),
             goods = Goods.objects.get(id=2),
@@ -127,6 +133,16 @@ def GenerateWorkshop(apps, schema_editor):
             recipe = Recipe.objects.get(id=2),
             is_available = False
         ).save()
+        Workshop_Goods.objects.create(
+            workshop = workshop,
+            goods_data = Goods.objects.get(id=1),
+            quantity = 10
+        )
+        Workshop_Goods.objects.create(
+            workshop = workshop,
+            goods_data = Goods.objects.get(id=2),
+            quantity = 5
+        )
     if(not Workshop.objects.filter(name="Taning shop")):
         char = Char.objects.get(id=2)
         workshop = Workshop.objects.create(type="Tanner", name="Taning shop", character=char)
@@ -143,7 +159,7 @@ def GenerateWorkshop(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_employee_country_id'),
+        ('core', '0001_recipe_constructed_goods_alter_recipe_required_goods'),
     ]
 
     operations = [

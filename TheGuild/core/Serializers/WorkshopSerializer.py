@@ -14,4 +14,4 @@ class UpgradeSerializer(serializers.ModelSerializer):
 class WorkshopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workshop
-        fields = ['id', 'character', 'name', 'type', 'upgrade']
+        fields = ['id', 'character', 'name', 'type', 'upgrade', 'tick', 'last_update']

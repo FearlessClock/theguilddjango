@@ -3,11 +3,13 @@
 from django.db import migrations
 from TheGuild.core.Models.CharacterModel import Character
 from TheGuild.core.Models.CountryModel import Country
-from TheGuild.core.Models.WorkshopModel import Workshop, Workshop_Upgrade, Workshop_Recipe, Workshop_Goods
+from TheGuild.core.Models.WorkshopModel import Workshop, Workshop_Upgrade, Workshop_Recipe
 from TheGuild.core.Models.WorkshopModel import Upgrade
 from TheGuild.core.Models.EmployeeModel import Employee
 from TheGuild.core.Models.GoodsModel import Goods, Recipe, Recipe_Goods
+from TheGuild.core.Models.CartModel import Cart
 from django.contrib.auth.models import User
+from TheGuild.core.Models.StorageModel import Storage, Storage_Goods
 
 def create_users(apps, schema_editor):
     user = User.objects.filter(username="AmusedSandpaper")
@@ -116,7 +118,8 @@ def GenerateWorkshop(apps, schema_editor):
     Char = Character
     if(not Workshop.objects.filter(name="Sword and Shield")):
         char = Char.objects.get(id=1)
-        workshop = Workshop.objects.create(type="Blacksmith", name="Sword and Shield", character=char)
+        storage = Storage.objects.create(number_of_storage_spaces=4)
+        workshop = Workshop.objects.create(type="Blacksmith", name="Sword and Shield", character=char, storage=storage)
         upgrade = Upgrade.objects.get(id=1)
         Workshop_Upgrade(
             workshop = workshop,
@@ -133,33 +136,46 @@ def GenerateWorkshop(apps, schema_editor):
             recipe = Recipe.objects.get(id=2),
             is_available = False
         ).save()
-        Workshop_Goods.objects.create(
-            workshop = workshop,
+        Storage_Goods.objects.create(
+            storage = storage,
             goods_data = Goods.objects.get(id=1),
             quantity = 10
         )
-        Workshop_Goods.objects.create(
-            workshop = workshop,
+        Storage_Goods.objects.create(
+            storage = storage,
             goods_data = Goods.objects.get(id=2),
             quantity = 5
         )
+    storage = Storage.objects.create(number_of_storage_spaces=4)
     if(not Workshop.objects.filter(name="Taning shop")):
         char = Char.objects.get(id=2)
-        workshop = Workshop.objects.create(type="Tanner", name="Taning shop", character=char)
+        workshop = Workshop.objects.create(type="Tanner", name="Taning shop", character=char, storage=storage)
         
+    storage = Storage.objects.create(number_of_storage_spaces=4)
     if(not Workshop.objects.filter(name="Joining wood")):
         char = Char.objects.get(id=3)
-        workshop = Workshop.objects.create(type="Joinery", name="Joining wood", character=char) 
+        workshop = Workshop.objects.create(type="Joinery", name="Joining wood", character=char, storage=storage) 
         
+    storage = Storage.objects.create(number_of_storage_spaces=4)
     if(not Workshop.objects.filter(name="Booking a chat")):
         char = Char.objects.get(id=4)
-        workshop = Workshop.objects.create(type="Coffee shop", name="Booking a chat", character=char)
+        workshop = Workshop.objects.create(type="Coffee shop", name="Booking a chat", character=char, storage=storage)
+        
+def GenerateCarts(apps, schema_editor):
+    storage = Storage.objects.create(number_of_storage_spaces=1)
+    cart = Cart.objects.create(
+        type="small cart",
+        character=Character.objects.get(id=1),
+        storage=storage,
+        location_type="workshop",
+        location_id=Workshop.GetWorkshopsForCharacter(1).first().id
+    )
     
     
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_recipe_constructed_goods_alter_recipe_required_goods'),
+        ('core', '0001_remove_cart_number_of_spaces_and_more'),
     ]
 
     operations = [
@@ -171,4 +187,5 @@ class Migration(migrations.Migration):
         migrations.RunPython(GenerateRecipes),
         migrations.RunPython(GenerateWorkshop),
         migrations.RunPython(GenerateEmployees),
+        migrations.RunPython(GenerateCarts),
     ]

@@ -1,5 +1,6 @@
 from TheGuild.core.Models.CountryModel import Country
-from TheGuild.core.Models.WorkshopModel import Workshop, Workshop_Recipe, Workshop_Goods
+from TheGuild.core.Models.WorkshopModel import Workshop, Workshop_Recipe
+from TheGuild.core.Models.StorageModel import Storage, Storage_Goods
 from TheGuild.core.Models.EmployeeModel import Employee
 from TheGuild.core.Models.GoodsModel import Recipe, Recipe_Goods
 
@@ -59,12 +60,12 @@ def UpdateWorkshop(workshop):
 def HasResources(workshop, workshop_recipe):
     recipe = workshop_recipe.recipe
     req_goods = Recipe_Goods.objects.filter(recipe_id=recipe.id)
-    workshop_goods = Workshop_Goods.objects.filter(workshop_id=workshop.id)
+    storage_goods = Storage_Goods.objects.filter(storage_id=workshop.storage.id)
     enough_resources = False
     for req_good in req_goods:
-        for work_good in workshop_goods:
-            if(req_good.goods.id == work_good.goods_data.id):
-                if(req_good.amount_required <= work_good.quantity):
+        for store_good in storage_goods:
+            if(req_good.goods.id == store_good.goods_data.id):
+                if(req_good.amount_required <= store_good.quantity):
                     enough_resources = True
                 else:
                     enough_resources = False
@@ -80,9 +81,9 @@ def HowManyProduced(amount, workshop, workshop_recipe):
     req_goods = Recipe_Goods.objects.filter(recipe_id=recipe.id)
     for req_good in req_goods:
         required_goods_list.append((req_good.goods.id, req_good.amount_required))
-    workshop_goods = Workshop_Goods.objects.filter(workshop_id=workshop.id)
-    for workshop_good in workshop_goods:
-        owned_goods_list.append((workshop_good.goods_data.id, workshop_good.quantity))
+    storage_goods = Storage_Goods.objects.filter(storage_id=workshop.storage.id)
+    for storage_good in storage_goods:
+        owned_goods_list.append((storage_good.goods_data.id, storage_good.quantity))
         
     amount_produced = -1
     for reqed_good in required_goods_list:
@@ -96,14 +97,14 @@ def HowManyProduced(amount, workshop, workshop_recipe):
     return amount_produced
 
 def UpdateGoods(workshop, workshop_recipe, amount):
-    workshop_goods = Workshop_Goods.objects.get_or_create(workshop_id = workshop.id, goods_data_id=workshop_recipe.recipe.constructed_goods.id)
-    workshop_goods[0].quantity += amount
-    workshop_goods[0].save()
+    storage_goods = Storage_Goods.objects.get_or_create(storage_id = workshop.storage.id, goods_data_id=workshop_recipe.recipe.constructed_goods.id)
+    storage_goods[0].quantity += amount
+    storage_goods[0].save()
     
     req_goods = Recipe_Goods.objects.filter(recipe_id=workshop_recipe.recipe.id)
-    workshop_goods = Workshop_Goods.objects.filter(workshop_id=workshop.id)
-    for workshop_good in workshop_goods:
+    storage_goods = Storage_Goods.objects.filter(storage_id=workshop.storage.id)
+    for storage_good in storage_goods:
         for req_good in req_goods:
-            if workshop_good.goods_data.id == req_good.goods.id:
-                workshop_good.quantity -= req_good.amount_required * amount
-                workshop_good.save()
+            if storage_good.goods_data.id == req_good.goods.id:
+                storage_good.quantity -= req_good.amount_required * amount
+                storage_good.save()

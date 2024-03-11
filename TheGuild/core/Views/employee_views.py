@@ -1,14 +1,14 @@
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from TheGuild.core.Serializers.EmployeeSerializer import EmployeeSerializer
 from TheGuild.core.Models.EmployeeModel import Employee
 from TheGuild.core.Models.CharacterModel import Character
 from TheGuild.core.Models.WorkshopModel import Workshop
 from TheGuild.core.Models.GoodsModel import Recipe
 from TheGuild.core.Models.CountryModel import Country
-
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from TheGuild.core.GameManager import TickCountry
 
@@ -81,3 +81,9 @@ class GiveRecipeToEmployeeView(APIView):
         employee.save()
         return Response('Employee ' + str(employee.id) + " recipe changed to " + str(recipeID), status=status.HTTP_200_OK)
     
+    def delete(self, request):
+        employee = Employee.objects.get(id=request.data["employeeID"])
+        employee.active_recipe = None
+        employee.save()
+        return Response('Employee ' + str(employee.id) + " stopped working")
+        

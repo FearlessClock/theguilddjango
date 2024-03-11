@@ -1,6 +1,7 @@
 from django.db import models
 from .CharacterModel import Character
 from .GoodsModel import Goods, Recipe
+from .StorageModel import Storage
 from django.contrib.auth.models import User
 from .BaseTimeModel import BaseTimeModel
 from datetime import datetime, UTC
@@ -16,20 +17,17 @@ class Workshop(BaseTimeModel):
                                                 through_fields=("workshop", "upgrade"))
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
-    stored_goods = models.ManyToManyField(Goods, through="Workshop_Goods", through_fields=("workshop", "goods_data"))
+    storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
     recipes = models.ManyToManyField(Recipe, through="Workshop_Recipe", through_fields=("workshop", "recipe"))
-        
+    
+    def GetWorkshopsForCharacter(character_id):
+        return Workshop.objects.filter(character_id=character_id)
     
 class Workshop_Upgrade(models.Model):
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
     upgrade = models.ForeignKey(Upgrade, on_delete=models.CASCADE)
     level = models.IntegerField(default=0)
-    
-class Workshop_Goods(models.Model):
-    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
-    goods_data = models.ForeignKey(Goods, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
-    
+        
 class Workshop_Recipe(models.Model):
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

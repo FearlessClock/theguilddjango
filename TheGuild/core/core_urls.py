@@ -3,8 +3,8 @@ from rest_framework import routers
 from .Views.core_views import CountryView, CharacterView, CharacterByCountryView
 from .Views.workshop_views import WorkshopListAllView, WorkshopListByCountryView, WorkshopDetailView, WorkshopUpgradeView, UpgradeListCreateView
 from .Views.employee_views import HireNewEmployeeView,EmployeeListAllView, EmployeeListForWorkshopAllView, EmployeeListForCountryAllView,EmployeeListForCountryUnemployedAllView, GiveRecipeToEmployeeView
-from .Views.cart_views import CartListAllView, CartCountryView,WorkshopToCartTransferView
-from .Views.cart_views import StorageToStorageTransferView
+from .Views.cart_views import CartListAllView, CartCountryView,WorkshopToCartTransferView,StorageToStorageTransferView,SetCartInMotion
+from .Views.marketplace_view import StallListAllView, StallListByCountryView, StallDetailView
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -32,9 +32,17 @@ urlpatterns = [
     
     # Handle Carts
     path("carts/", CartListAllView.as_view(), name="Carts"),
-    path("carts/<int:countryID>", CartCountryView.as_view(), name="Carts"),
+    path("carts/<int:countryID>/", CartCountryView.as_view(), name="Carts"),
     path("workshop/cart/transfer/", WorkshopToCartTransferView.as_view(), name="Carts"),
+    path("cart/sendtolocation/", SetCartInMotion.as_view(), name="Cart"),
     
     # Handle storage
-    path("movetostorage/", StorageToStorageTransferView.as_view(), name="Storage")
+    path("movetostorage/", StorageToStorageTransferView.as_view(), name="Storage"),
+    
+    # Marketplace Storage
+    path("marketplace/stalls/", StallListAllView.as_view(), name="Stalls"),
+    path("marketplace/stalls/<int:countryID>/", StallListByCountryView.as_view(), name="Stalls"),
+    path("marketplace/stall/", StallDetailView.as_view(), name="Stalls")
+    
+    
 ]

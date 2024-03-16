@@ -2,12 +2,14 @@
 
 from django.db import migrations
 from TheGuild.core.Models.CharacterModel import Character
-from TheGuild.core.Models.CountryModel import Country
+from TheGuild.core.Models.CountryModel import Country, GridPoint
 from TheGuild.core.Models.WorkshopModel import Workshop, Workshop_Upgrade, Workshop_Recipe
 from TheGuild.core.Models.WorkshopModel import Upgrade
 from TheGuild.core.Models.EmployeeModel import Employee
 from TheGuild.core.Models.GoodsModel import Goods, Recipe, Recipe_Goods
 from TheGuild.core.Models.CartModel import Cart
+from TheGuild.core.Models.BuildingModel import Building
+from TheGuild.core.Models.MarketplaceModel import Stall
 from django.contrib.auth.models import User
 from TheGuild.core.Models.StorageModel import Storage, Storage_Goods
 
@@ -53,6 +55,14 @@ def GenerateCountry(apps, schema_editor):
     if(not Country.objects.filter(name="Belgium")):
         Country.objects.create(name="Belgium")
     
+def GenerateGrid(apps, schema_editor):
+    country = Country.objects.get(id=1)
+    if GridPoint.objects.get(x=0, y=0):
+        return
+    for x in range(5):
+        for y in range(5):
+            grid_point = GridPoint.objects.create(country=country, x=x, y=y)
+            
 def GenerateUpgrades(apps, schema_editor):
     if(not Upgrade.objects.filter(name="Bars")):
         Upgrade.objects.create(name="Bars", max_level=5)
@@ -168,19 +178,56 @@ def GenerateCarts(apps, schema_editor):
         character=Character.objects.get(id=1),
         storage=storage,
         location_type="workshop",
-        location_id=Workshop.GetWorkshopsForCharacter(1).first().id
+        location_id=Workshop.GetWorkshopsForCharacter(1).first().id,
+        current_x=0,
+        current_y=0,
+        is_traveling=False,
     )
     
+def GenerateStalls(apps, schema_editor):
+    country = Country.objects.get(id=1)
+    if not Building.objects.filter(name="Wood Stall"):
+        storage = Storage.objects.create(number_of_storage_spaces=10)
+        grid_point = GridPoint.objects.get(x=2,y=3)
+        building = Building.objects.create(country=country, grid_point=grid_point, type="Stall", name="Wood Stall")
+        Stall.objects.create(country=country, storage=storage, building=building)
+        grid_point.has_building = True
+        grid_point.save()
     
+    if not Building.objects.filter(name="Stone Stall"):
+        grid_point = GridPoint.objects.get(x=3,y=3)
+        building = Building.objects.create(country=country, grid_point=grid_point, type="Stall", name="Stone Stall")
+        storage = Storage.objects.create(number_of_storage_spaces=11)
+        Stall.objects.create(country=country, storage=storage, building=building)
+        grid_point.has_building = True
+        grid_point.save()
+    
+    if not Building.objects.filter(name="Potion Stall"):
+        grid_point = GridPoint.objects.get(x=2,y=2)
+        building = Building.objects.create(country=country, grid_point=grid_point, type="Stall", name="Potion Stall")
+        storage = Storage.objects.create(number_of_storage_spaces=12)
+        Stall.objects.create(country=country, storage=storage, building=building)
+        grid_point.has_building = True
+        grid_point.save()
+    
+    if not Building.objects.filter(name="Weapons Stall"):
+        grid_point = GridPoint.objects.get(x=3,y=2)
+        building = Building.objects.create(country=country, grid_point=grid_point, type="Stall", name="Weapons Stall")
+        storage = Storage.objects.create(number_of_storage_spaces=13)
+        Stall.objects.create(country=country, storage=storage, building=building)
+        grid_point.has_building = True
+        grid_point.save()
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_remove_cart_number_of_spaces_and_more'),
+        ('core', '0001_remove_cart_target_location_cart_current_x_and_more'),
     ]
 
     operations = [
         migrations.RunPython(create_users),
         migrations.RunPython(GenerateCountry),
+        migrations.RunPython(GenerateGrid),
         migrations.RunPython(GenerateCharacters),
         migrations.RunPython(GenerateUpgrades),
         migrations.RunPython(GenerateGoods),
@@ -188,4 +235,5 @@ class Migration(migrations.Migration):
         migrations.RunPython(GenerateWorkshop),
         migrations.RunPython(GenerateEmployees),
         migrations.RunPython(GenerateCarts),
+        migrations.RunPython(GenerateStalls),
     ]

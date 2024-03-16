@@ -6,7 +6,7 @@ from TheGuild.core.Models.WorkshopModel import Workshop, Upgrade, Workshop_Upgra
 from TheGuild.core.Serializers.WorkshopSerializer import WorkshopSerializer, UpgradeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from TheGuild.core.GameManager import UpdateWorkshop
+from TheGuild.core.GameManagement.GameManager import UpdateWorkshop
 
 
 class WorkshopListAllView(generics.ListCreateAPIView):

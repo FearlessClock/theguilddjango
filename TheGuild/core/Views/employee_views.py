@@ -10,7 +10,7 @@ from TheGuild.core.Models.WorkshopModel import Workshop
 from TheGuild.core.Models.GoodsModel import Recipe
 from TheGuild.core.Models.CountryModel import Country
 
-from TheGuild.core.GameManager import TickCountry
+from TheGuild.core.GameManagement.GameManager import TickCountry
 
 
 class EmployeeListAllView(generics.ListCreateAPIView):

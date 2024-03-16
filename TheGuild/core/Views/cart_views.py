@@ -8,12 +8,17 @@ from TheGuild.core.Models.StorageModel import Storage, Storage_Goods
 from TheGuild.core.Models.CharacterModel import Character
 from TheGuild.core.Models.WorkshopModel import Workshop
 from TheGuild.core.Models.GoodsModel import Goods
-
+from TheGuild.core.Models.CountryModel import GridPoint, Country
+from datetime import datetime, UTC
 
 class CartListAllView(generics.ListCreateAPIView):
     permission_classes=[IsAuthenticated]
     serializer_class=CartSerializer
-    queryset=Cart.objects.all()
+    def get_queryset(self):
+        carts = Cart.objects.all()
+        for cart in carts:
+            cart.UpdateCart()
+        return carts
     
 class CartCountryView(generics.ListAPIView):
     permission_classes=[IsAuthenticated]
@@ -24,6 +29,8 @@ class CartCountryView(generics.ListAPIView):
         if filter is not None:
             chars = Character.objects.filter(country_id=filter).values_list('id',  flat=True)
             queryset = Cart.objects.filter(id__in=chars)
+            for cart in queryset:
+                cart.UpdateCart()
             return queryset
         return None
     
@@ -41,6 +48,7 @@ class WorkshopToCartTransferView(APIView):
         cart = Cart.objects.get(id=cart_id)
         if not cart:
             return Response("Could not find cart", status=status.HTTP_204_NO_CONTENT)
+        cart.UpdateCart()
         if cart.location_type != "workshop" or cart.location_id != workshop_id:
             return Response("This cart is not at the correct location for this task", status=status.HTTP_400_BAD_REQUEST)
         
@@ -94,3 +102,30 @@ class StorageToStorageTransferView(APIView):
         goods_to_move.quantity -= quantity
         goods_to_move.save()
         return Response("Moved " +str(quantity) + " Goods:" + str(goods_id) + " from " + str(storage_1_id) + " to " + str(storage_2_id))
+    
+class SetCartInMotion(APIView):
+    permission_classes=[IsAuthenticated]
+    serializer_class=CartSerializer
+    
+    def post(self, request):
+        cartID = int(request.data["cartID"])
+        if cartID is None:
+            return Response("Please add the cart ID to the path params", status=status.HTTP_400_BAD_REQUEST)
+        x = int(request.data["x"])
+        y = int(request.data["y"])
+        cart = Cart.objects.get(id=cartID)
+        if cart.is_traveling:
+            return Response("Cart already in motion", status=status.HTTP_400_BAD_REQUEST)
+        if cart.current_x == x and cart.current_y == y:
+            return Response("Cart already at location", status=status.HTTP_200_OK)
+        grid = GridPoint.objects.filter(x=x,y=y,country=cart.character.country)
+        if not grid:
+            return Response("Grid point does not exist", status=status.HTTP_400_BAD_REQUEST)
+        cart.UpdateCart()
+        cart.target_x = x
+        cart.target_y = y
+        cart.travel_duration_seconds = abs(x - cart.current_x) + abs(y-cart.current_y) * self.travel_speed_per_block
+        cart.departure_time = datetime.now(UTC)
+        cart.is_traveling = True
+        cart.save()
+        return Response("Cart in motion", status=status.HTTP_200_OK)

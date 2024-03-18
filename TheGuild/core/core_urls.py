@@ -1,10 +1,11 @@
 from django.urls import include, path
 from rest_framework import routers
 from .Views.core_views import CountryView, CharacterView, CharacterByCountryView
+from .Views.building_views import BuildingView, BuildingDetailView, BuildingByCountryView
 from .Views.workshop_views import WorkshopListAllView, WorkshopListByCountryView, WorkshopDetailView, WorkshopUpgradeView, UpgradeListCreateView
 from .Views.employee_views import HireNewEmployeeView,EmployeeListAllView, EmployeeListForWorkshopAllView, EmployeeListForCountryAllView,EmployeeListForCountryUnemployedAllView, GiveRecipeToEmployeeView
 from .Views.cart_views import CartListAllView, CartCountryView,WorkshopToCartTransferView,StorageToStorageTransferView,SetCartInMotion
-from .Views.marketplace_view import StallListAllView, StallListByCountryView, StallDetailView
+from .Views.marketplace_view import StallListAllView, StallListByCountryView, StallDetailView, SellToStall
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -42,7 +43,10 @@ urlpatterns = [
     # Marketplace Storage
     path("marketplace/stalls/", StallListAllView.as_view(), name="Stalls"),
     path("marketplace/stalls/<int:countryID>/", StallListByCountryView.as_view(), name="Stalls"),
-    path("marketplace/stall/", StallDetailView.as_view(), name="Stalls")
+    path("marketplace/stall/", StallDetailView.as_view(), name="Stalls"),
+    path("marketplace/selltostall/", SellToStall.as_view(), name="Stalls"),
     
-    
+    path("buildings/", BuildingView.as_view(), name="Building"),
+    path("building/", BuildingDetailView.as_view(), name="Building"),
+    path("buildings/<int:countryID>/", BuildingByCountryView.as_view(), name="Building")
 ]

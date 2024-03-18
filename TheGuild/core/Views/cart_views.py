@@ -124,7 +124,7 @@ class SetCartInMotion(APIView):
         cart.UpdateCart()
         cart.target_x = x
         cart.target_y = y
-        cart.travel_duration_seconds = abs(x - cart.current_x) + abs(y-cart.current_y) * self.travel_speed_per_block
+        cart.travel_duration_seconds = abs(x - cart.current_x) + abs(y-cart.current_y) * cart.travel_speed_per_block
         cart.departure_time = datetime.now(UTC)
         cart.is_traveling = True
         cart.save()

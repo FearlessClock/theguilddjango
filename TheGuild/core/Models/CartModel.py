@@ -41,7 +41,7 @@ class Cart(BaseTimeModel):
                     self.location_id = -1
                     self.location_type = ""
                 else:
-                    building = Building.objects.filter(grid_point_id=gridPoint.id, country=self.character.country)
+                    building = Building.objects.get(grid_point_id=gridPoint.id, country=self.character.country)
                     self.location_id = building.id
                     self.location_type = building.type
                 self.save()

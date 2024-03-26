@@ -1,7 +1,9 @@
 from django.db import models
-from perlin_noise import PerlinNoise
+from noise import pnoise1
+from .BaseTimeModel import BaseTimeModel
+from datetime import datetime, UTC
 
-class Goods(models.Model):
+class Goods(BaseTimeModel):
     name = models.CharField(max_length=200)
     perlin_noise_seed = models.IntegerField(default=123456789)
     price_min = models.IntegerField(default=10)
@@ -10,13 +12,21 @@ class Goods(models.Model):
     def Remap(self, value, oldMin, oldMax, newMin, newMax):
         return (((value - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
     
-    def GetCurrentPrice(self, tick):
-        noise = PerlinNoise(octaves=10, seed=self.perlin_noise_seed)
-        return self.Remap(noise(tick), 0, 1, self.price_min, self.price_max)
+    def GetCurrentPrice(self):
+        self.TickGoods()
+        octaves = 1
+        x = self.tick * 0.002
+        return int(self.Remap(int(pnoise1(x / 16.0*octaves, octaves) * 127.0 + 128.0), 0.0, 250, self.price_min, self.price_max))
+    
+    def TickGoods(self):
+        secondsSinceLastUpdate = (datetime.now(UTC) - self.last_update).total_seconds()
+        if secondsSinceLastUpdate > self.tick_in_seconds:
+            self.last_update = datetime.now(UTC)
+            self.tick = int((datetime.now(UTC) - self.start_date).total_seconds() / self.tick_in_seconds)
+            self.save()
     
 class Recipe(models.Model):
     name = models.CharField(max_length=200)
-    required_goods = models.ManyToManyField(Goods, related_name="+", through="Recipe_Goods", through_fields=("recipe", "goods"))
     constructed_goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
     construction_ticks = models.IntegerField(default=20)
     

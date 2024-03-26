@@ -34,6 +34,18 @@ class CartCountryView(generics.ListAPIView):
             return queryset
         return None
     
+class CartsAtWorkshotView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class=CartSerializer
+    
+    def get_queryset(self):
+        workshopID = self.kwargs['workshopID']
+        if workshopID is not None:
+            workshop = Workshop.objects.get(id=workshopID)
+            carts = Cart.objects.filter(character_id=workshop.character.id, location_id=workshopID, is_traveling=False)
+            return carts
+        return None
+    
 class WorkshopToCartTransferView(APIView):
     permission_classes=[IsAuthenticated]
     
@@ -49,7 +61,7 @@ class WorkshopToCartTransferView(APIView):
         if not cart:
             return Response("Could not find cart", status=status.HTTP_204_NO_CONTENT)
         cart.UpdateCart()
-        if cart.location_type != "workshop" or cart.location_id != workshop_id:
+        if cart.location_type.lower() != "workshop" or cart.location_id != workshop_id:
             return Response("This cart is not at the correct location for this task", status=status.HTTP_400_BAD_REQUEST)
         
         workshop = Workshop.objects.get(id=workshop_id)

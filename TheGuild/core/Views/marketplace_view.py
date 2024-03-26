@@ -66,7 +66,7 @@ class SellToStall(APIView):
         
         character = cart.character
         goods = Goods.objects.get(id=goodsID)
-        price = goods.GetCurrentPrice(character.country.tick)
+        price = goods.GetCurrentPrice()
         cart_goods.quantity = cart_goods.quantity - quantity
         character.money += price * quantity
         if cart_goods.quantity == 0:

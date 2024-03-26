@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from TheGuild.core.Models.CharacterModel import Character
-from TheGuild.core.Models.WorkshopModel import Workshop, Upgrade, Workshop_Upgrade
-from TheGuild.core.Serializers.WorkshopSerializer import WorkshopSerializer, UpgradeSerializer
+from TheGuild.core.Models.WorkshopModel import Workshop, Upgrade, Workshop_Upgrade, Workshop_Recipe
+from TheGuild.core.Serializers.WorkshopSerializer import WorkshopSerializer, UpgradeSerializer, WorkshopRecipeWithFullRecipeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from TheGuild.core.GameManagement.GameManager import UpdateWorkshop
@@ -23,6 +23,21 @@ class WorkshopListByCountryView(generics.ListAPIView):
         if filter is not None:
             chars = Character.objects.filter(country_id=filter, user_id=user.id).values_list('id',  flat=True)
             queryset = Workshop.objects.filter(id__in=chars)
+            for workshop in queryset:
+                UpdateWorkshop(workshop)
+            return queryset
+        return None
+    
+class WorkshopListByCountryAndCharacterView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = WorkshopSerializer
+    
+    def get_queryset(self):
+        user = self.request.user
+        characterID = self.kwargs['characterID']
+        if characterID is not None:
+            char = Character.objects.get(id=characterID, user_id=user.id)
+            queryset = Workshop.objects.filter(character_id=char.id)
             for workshop in queryset:
                 UpdateWorkshop(workshop)
             return queryset
@@ -59,3 +74,11 @@ class WorkshopUpgradeView(APIView):
 class UpgradeListCreateView(generics.ListCreateAPIView):
     queryset = Upgrade.objects.all()
     serializer_class = UpgradeSerializer
+    
+class RecipesInWorkshopView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = WorkshopRecipeWithFullRecipeSerializer
+    
+    def get(self, request):
+        workshopID = request.data["workshopID"]
+        return Response(WorkshopRecipeWithFullRecipeSerializer(Workshop_Recipe.objects.filter(workshop_id=workshopID), many=True).data, status=status.HTTP_200_OK)

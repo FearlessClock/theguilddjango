@@ -21,18 +21,19 @@ def UpdateWorkshop(workshop):
     if secondsSinceLastUpdate > workshop.tick_in_seconds:
         workshop.last_update = datetime.now(UTC)
         workshop.tick = int((datetime.now(UTC) - workshop.start_date).total_seconds() / workshop.tick_in_seconds)
-        employees = Employee.objects.filter(workshop_id=workshop.id).values()
+        employees = Employee.objects.filter(workshop_id=workshop.id, is_assigned=True).values()
         recipeIdsWorkedOn = []
         for employee in employees:
-            workedOnRecipe = Workshop_Recipe.objects.get(recipe_id=employee["active_recipe_id"], workshop_id=workshop.id)
-            if workedOnRecipe:
-                found = False
-                for i in range(len(recipeIdsWorkedOn)):
-                    if recipeIdsWorkedOn[i][0] == workedOnRecipe.id:
-                        recipeIdsWorkedOn[i] = (recipeIdsWorkedOn[i][0], recipeIdsWorkedOn[i][1]+1)
-                        found= True
-                if not found:
-                    recipeIdsWorkedOn.append((workedOnRecipe.id, 1))
+            if employee["active_recipe_id"] is not None:
+                workedOnRecipe = Workshop_Recipe.objects.get(recipe_id=employee["active_recipe_id"], workshop_id=workshop.id)
+                if workedOnRecipe:
+                    found = False
+                    for i in range(len(recipeIdsWorkedOn)):
+                        if recipeIdsWorkedOn[i][0] == workedOnRecipe.id:
+                            recipeIdsWorkedOn[i] = (recipeIdsWorkedOn[i][0], recipeIdsWorkedOn[i][1]+1)
+                            found= True
+                    if not found:
+                        recipeIdsWorkedOn.append((workedOnRecipe.id, 1))
                 
         for recipeWorkedOn in recipeIdsWorkedOn:
             recipe = Workshop_Recipe.objects.get(id=recipeWorkedOn[0])

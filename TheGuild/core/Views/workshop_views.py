@@ -75,10 +75,10 @@ class UpgradeListCreateView(generics.ListCreateAPIView):
     queryset = Upgrade.objects.all()
     serializer_class = UpgradeSerializer
     
-class RecipesInWorkshopView(APIView):
+class RecipesInWorkshopView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = WorkshopRecipeWithFullRecipeSerializer
     
-    def get(self, request):
-        workshopID = request.data["workshopID"]
-        return Response(WorkshopRecipeWithFullRecipeSerializer(Workshop_Recipe.objects.filter(workshop_id=workshopID), many=True).data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        workshopID = self.kwargs['workshopID']
+        return Workshop_Recipe.objects.filter(workshop_id=workshopID)

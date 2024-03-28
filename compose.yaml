@@ -9,10 +9,23 @@
 # https://github.com/docker/awesome-compose
 services:
   server:
+    env_file:
+      - .env
     build:
       context: .
     ports:
       - 8000:8000
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: the_guild
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

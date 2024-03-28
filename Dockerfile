@@ -7,7 +7,7 @@
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
 ARG PYTHON_VERSION=3.11.5
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}-alpine
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -16,7 +16,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /TheGuild
+WORKDIR /
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
@@ -29,6 +29,10 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+
+RUN \
+ apk add --no-cache postgresql-libs && \
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.

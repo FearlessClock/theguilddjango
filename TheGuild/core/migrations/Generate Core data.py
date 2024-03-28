@@ -31,7 +31,6 @@ def create_users(apps, schema_editor):
 def GenerateCountry(apps, schema_editor):
     data = load_json_data()
     for countryInfo in data['countries']:
-        print(countryInfo['name'])
         if(not Country.objects.filter(name=countryInfo['name'])):
             Country.objects.create(id=countryInfo['id'], name=countryInfo['name']).save()
     
@@ -50,7 +49,6 @@ def GenerateGrid(apps, schema_editor):
 def GenerateCharacters(apps, schema_editor):
     data = load_json_data()
     for charData in data['characters']:
-        print(charData)
         if(not Character.objects.filter(id=charData['id'])):
             country = Country.objects.get(id=charData['country_id'])
             user = User.objects.get(id=charData['user_id'])
@@ -91,7 +89,6 @@ def GenerateEmployees(apps, schema_editor):
 def GenerateWorkshop(apps, schema_editor):
     data = load_json_data()
     for json in data['workshops']:
-        print(json['character_id'])
         if(not Workshop.objects.filter(id=json['id'])):
             char = Character.objects.get(id=json['character_id'])
             grid_point = GridPoint.objects.get(x=json['x'],y=json['y'], country=char.country )

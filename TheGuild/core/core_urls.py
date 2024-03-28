@@ -13,7 +13,7 @@ urlpatterns = [
     path("country/", CountryView.as_view(), name='Country'),
     # Characters
     path("character/", CharacterView.as_view(), name='Character'),
-    path("character/<int:countryID>/", CharacterByCountryView.as_view(), name="Character"),
+    path("character/<int:countryID>/", CharacterByCountryView.as_view(), name="Character-Country"),
     
     # Workshops
     path("workshops/", WorkshopListAllView.as_view(), name="Workshop"),
@@ -24,7 +24,7 @@ urlpatterns = [
     path("workshop/upgrade/", WorkshopUpgradeView.as_view(),name="Workshop"),
     path("workshop/hire/", HireNewEmployeeView.as_view(),name="Workshop"),
     path("workshop/give-recipe/", GiveRecipeToEmployeeView.as_view(),name="Workshop"),
-    path("workshop/get-recipe/", RecipesInWorkshopView.as_view(),name="Workshop"),
+    path("workshop/<int:workshopID>/get-recipe/", RecipesInWorkshopView.as_view(),name="Workshop"),
     
     # Employees
     path("employees/", EmployeeListAllView.as_view(),name="Employees"),

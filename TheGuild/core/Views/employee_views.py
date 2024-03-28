@@ -24,19 +24,25 @@ class HireNewEmployeeView(APIView):
     def post(self, request):    # Hire a new employee
         workshop = Workshop.objects.get(id=request.data["workshopID"])
         #TODO: Create new employee if none are waiting
-        employee = Employee.objects.filter(is_assigned=False).first()
-        employee.is_assigned = True
-        employee.workshop = workshop
-        employee.active_recipe = None
-        employee.save()
-        return Response('Employee ' + str(employee.id) + " hired", status=status.HTTP_200_OK)
+        employee = Employee.objects.filter(is_assigned=False, country=workshop.character.country).first()
+        if employee:
+            employee.is_assigned = True
+            employee.workshop = workshop
+            employee.active_recipe = None
+            employee.save()
+            return Response({'success':True, 'employee':employee.id}, status=status.HTTP_200_OK)
+        else:
+            return Response({'success':False, 'message':"No available employee found"}, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request):  # Fire an employee
-        employee = Employee.objects.get(id=request.data["employeeID"])
-        employee.is_assigned = False
-        employee.workshop = None
-        employee.save()
-        return Response('Employee ' + str(employee.id) + " fired", status=status.HTTP_200_OK)    
+        try:
+            employee = Employee.objects.get(id=request.data["employeeID"])
+            employee.is_assigned = False
+            employee.workshop = None
+            employee.save()
+            return Response({'success':True, 'employee':employee.id}, status=status.HTTP_200_OK)    
+        except:
+            return Response({'success':False, 'message':"Employee not found"}, status=status.HTTP_400_BAD_REQUEST)    
 
 class EmployeeListForWorkshopAllView(generics.ListCreateAPIView):
     permission_classes=[permissions.IsAuthenticated]
@@ -73,17 +79,29 @@ class EmployeeListForCountryUnemployedAllView(generics.ListCreateAPIView):
 class GiveRecipeToEmployeeView(APIView):
     permission_classes = [IsAuthenticated]
     
-    def post(self, request):    
-        employee = Employee.objects.get(id=request.data["employeeID"])
+    def post(self, request):
+        employeeID = request.data["employeeID"]
         recipeID = request.data["recipeID"]
-        recipe = Recipe.objects.get(id=recipeID)
+        try:
+            employee = Employee.objects.get(id=employeeID)
+        except:
+            return Response({'success':False, 'employee':employeeID, 'recipeID':recipeID}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            recipe = Recipe.objects.get(id=recipeID)
+        except:
+            return Response({'success':False, 'employee':employee.id, 'recipeID':recipeID}, status=status.HTTP_400_BAD_REQUEST)            
+        
         employee.active_recipe = recipe
         employee.save()
-        return Response('Employee ' + str(employee.id) + " recipe changed to " + str(recipeID), status=status.HTTP_200_OK)
+        return Response({'success':True, 'employee':employee.id, 'recipeID':recipeID}, status=status.HTTP_200_OK)
     
     def delete(self, request):
-        employee = Employee.objects.get(id=request.data["employeeID"])
-        employee.active_recipe = None
-        employee.save()
-        return Response('Employee ' + str(employee.id) + " stopped working")
+        try:
+            employee = Employee.objects.get(id=request.data["employeeID"])
+            employee.active_recipe = None
+            employee.save()
+            return Response({'success':True, 'employee':employee.id}, status=status.HTTP_200_OK)
+        except:
+            return Response({'success':False, 'employee':employee.id}, status=status.HTTP_400_BAD_REQUEST)
         

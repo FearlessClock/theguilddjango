@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('api/', include('TheGuild.account.account_urls')),
-    path('api/', include('TheGuild.core.core_urls')),
+    path('api/auth/', include(('TheGuild.account.account_urls', 'accounts'), namespace='accounts')),
+    path('api/', include(('TheGuild.core.core_urls', 'core'), namespace='core')),
 ]

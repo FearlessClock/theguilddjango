@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Yo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -53,19 +52,52 @@
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form id="login-form" method="POST" action="/login">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="login-button">Login</button>
-        </form>
-    </div>
+    {% csrf_token %}
+    <h1> Countries </h1>
+    <form id="login-form" method="POST" action="{% url 'Core:home'%}">
+        {% for country in countries%}
+        {{country.name}} 
+        <input type="radio" name="country" id="{{country.id}}"><br>
+        {%endfor%}
+        <input type="submit" value="Load Characters" onclick="onclicked()">
+    </form>
+    {%if character != None%}
+    <h1> Characters </h1>
+    {%endif%}
+    <h1> Workshops </h1>
 </body>
 </html>
+
+<script>
+    const token = '{{token}}';
+    window.sessionStorage["token"] = token;
+    console.log(token)
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    async function onclicked(){
+        
+        const countryCheckboxes = document.getElementsByName("country")
+        console.log(countryCheckboxes[0])
+        let selectedCountry = 0
+        for(let i = 0; i < countryCheckboxes.length; i++){
+            if(countryCheckboxes[i].checked){
+                selectedCountry = countryCheckboxes[i].id;
+            }
+        }
+
+        const xhttp = new XMLHttpRequest();
+
+        // Define a callback function
+        xhttp.onload = function() {
+            console.log(this.responseText)
+        }
+        // Send a request
+        xhttp.open("GET", "/api/character/" + selectedCountry + "/");
+        xhttp.setRequestHeader("Authorization","token " + token);
+        xhttp.setRequestHeader("X-CSRFToken",csrftoken);
+        xhttp.send();
+        let myHeaders = new Headers({
+            "Authorization": "token " + token,
+            'X-CSRFToken': csrftoken,
+          });
+    }
+</script>

@@ -3,7 +3,7 @@ from rest_framework import generics, permissions, status
 from ..Models.MarketplaceModel import Stall
 from ..Models.CartModel import Cart
 from ..Models.GoodsModel import Goods
-from ..Models.StorageModel import Storage_Goods
+from ..Models.StorageModel import Storage_Goods, Storage
 from ..Models.CharacterModel import Character
 from rest_framework.views import APIView
 from ..Serializers.marketplace_serializer import StallSerializer
@@ -51,8 +51,13 @@ class SellToStall(APIView):
         except ObjectDoesNotExist:
             return Response("Stall not found", status=status.HTTP_400_BAD_REQUEST)
         
-        if cart.location_id != stallID or cart.location_type!=stall.building.type:
+        if cart.location_id != stall.building.id or cart.location_type!=stall.building.type:
             return Response("Cart not at stall", status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            goods = Storage_Goods.objects.get(storage_id=stall.storage.id, goods_data_id=goodsID)
+        except:
+            return Response({'message':"Stall doesn't contain this goods"})
         
         try:
             cart_goods = Storage_Goods.objects.get(goods_data_id=goodsID, storage_id=cart.storage.id)

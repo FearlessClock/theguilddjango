@@ -55,7 +55,8 @@
 <body>
     <div class="login-container">
         <h2>Login</h2> 
-        <form id="login-form" method="POST" action="/api/user_login/">
+        <form id="login-form" method="POST" action="{% url 'accounts:login'%}">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -64,6 +65,7 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
+            
             <button type="submit" class="login-button">Login</button>
         </form>
     </div>

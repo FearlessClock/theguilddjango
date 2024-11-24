@@ -128,7 +128,7 @@ def GenerateCarts(apps, schema_editor):
                 character=Character.objects.get(id=cart['character']),
                 storage=storage,
                 location_type=cart['location_type'],
-                location_id=Workshop.GetWorkshopsForCharacter(cart['character']).first().id,
+                location_id=Workshop.GetWorkshopsForCharacter(cart['character']).first().building.id,
                 current_x=cart['x'],
                 current_y=cart['y'],
                 is_traveling=cart['is_traveling'],

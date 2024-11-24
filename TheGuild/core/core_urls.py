@@ -6,6 +6,8 @@ from .Views.workshop_views import WorkshopListAllView, WorkshopListByCountryView
 from .Views.employee_views import HireNewEmployeeView,EmployeeListAllView, EmployeeListForWorkshopAllView, EmployeeListForCountryAllView,EmployeeListForCountryUnemployedAllView, GiveRecipeToEmployeeView
 from .Views.cart_views import CartListAllView, CartCountryView,WorkshopToCartTransferView,StorageToStorageTransferView,SetCartInMotion, CartsAtWorkshotView
 from .Views.marketplace_view import StallListAllView, StallListByCountryView, StallDetailView, SellToStall
+from .Views.testView import list_shopping_cart
+from .Views.homepage import Homepage
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -51,5 +53,8 @@ urlpatterns = [
     
     path("buildings/", BuildingView.as_view(), name="Building"),
     path("building/", BuildingDetailView.as_view(), name="Building"),
-    path("buildings/<int:countryID>/", BuildingByCountryView.as_view(), name="Building")
+    path("buildings/<int:countryID>/", BuildingByCountryView.as_view(), name="Building"),
+    
+    path("home/", Homepage, name="home"),
+    path("test/", list_shopping_cart, name="home")
 ]

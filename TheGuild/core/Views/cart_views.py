@@ -42,7 +42,7 @@ class CartsAtWorkshotView(generics.ListAPIView):
         workshopID = self.kwargs['workshopID']
         if workshopID is not None:
             workshop = Workshop.objects.get(id=workshopID)
-            carts = Cart.objects.filter(character_id=workshop.character.id, location_id=workshopID, is_traveling=False)
+            carts = Cart.objects.filter(character_id=workshop.character.id, location_id=workshop.building.id, is_traveling=False)
             return carts
         return None
     

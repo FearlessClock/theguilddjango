@@ -3,6 +3,7 @@ import json
 from django.db import migrations
 from TheGuild.core.Models.CharacterModel import Character
 from TheGuild.core.Models.CountryModel import Country, GridPoint
+from TheGuild.core.Models.ProfessionInformationModel import ProfessionInformation
 from TheGuild.core.Models.WorkshopModel import Workshop, Workshop_Upgrade, Workshop_Recipe
 from TheGuild.core.Models.WorkshopModel import Upgrade
 from TheGuild.core.Models.EmployeeModel import Employee
@@ -33,6 +34,12 @@ def GenerateCountry(apps, schema_editor):
     for countryInfo in data['countries']:
         if(not Country.objects.filter(name=countryInfo['name'])):
             Country.objects.create(id=countryInfo['id'], name=countryInfo['name']).save()
+            
+def GenerateProfessionInformation(apps, schema_editor):
+    data = load_json_data()
+    for professionInformation in data['profession_information']:
+        if(not ProfessionInformation.objects.filter(name=professionInformation['name'])):
+            ProfessionInformation.objects.create(id=professionInformation['id'], name=professionInformation['name'], description=professionInformation["description"]).save()
     
 def GenerateGrid(apps, schema_editor):
     data = load_json_data()
@@ -155,12 +162,13 @@ def GenerateStalls(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_upgrade_price'),
+        ('core', '0001_professioninformation'),
     ]
 
     operations = [
         migrations.RunPython(create_users),
         migrations.RunPython(GenerateCountry),
+        migrations.RunPython(GenerateProfessionInformation),
         migrations.RunPython(GenerateGrid),
         migrations.RunPython(GenerateCharacters),
         migrations.RunPython(GenerateUpgrades),

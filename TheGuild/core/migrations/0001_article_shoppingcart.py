@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', 'Generate Core data'),
+        ('core', '0001_upgrade_price'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

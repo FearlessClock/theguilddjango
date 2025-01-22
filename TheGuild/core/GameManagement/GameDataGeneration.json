@@ -33,6 +33,18 @@
             "grid_size":7
         }
     ],
+    "profession_information":[
+        {
+            "id":1,
+            "name":"Woodworker",
+            "description":"A hard working tradesmen making things out of wood"
+        },
+        {
+            "id":2,
+            "name":"StoneMason",
+            "description":"Making things out of stone since the dawn of time"
+        }
+    ],
     "characters":[
         {
             "id":1,

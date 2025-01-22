@@ -3,7 +3,8 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from ..Models.CountryModel import Country
 from ..Models.CharacterModel import Character
-from ..Serializers.core_serializer import CountrySerializer, CharacterSerializer
+from ..Models.ProfessionInformationModel import ProfessionInformation
+from ..Serializers.core_serializer import CountrySerializer, CharacterSerializer, ProfessionInformationSerializer
 from ..Serializers.storage_serializer import StorageGoodsSerializer
 from ..Models.StorageModel import Storage_Goods
 from rest_framework.permissions import IsAuthenticated
@@ -14,6 +15,11 @@ from django.http import HttpResponse
 class CountryView(generics.ListCreateAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
+    permission_classes = [IsAuthenticated]
+    
+class ProfessionInfromationView(generics.ListCreateAPIView):
+    queryset = ProfessionInformation.objects.all()
+    serializer_class = ProfessionInformationSerializer
     permission_classes = [IsAuthenticated]
 
 class CharacterView(generics.ListCreateAPIView):

@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
-from .Views.core_views import CountryView, CharacterView, CharacterByCountryView,GetAllStoredGoodsView
+from .Views.core_views import CountryView, CharacterView, CharacterByCountryView,GetAllStoredGoodsView, ProfessionInfromationView
 from .Views.building_views import BuildingView, BuildingDetailView, BuildingByCountryView
 from .Views.workshop_views import WorkshopListAllView, WorkshopListByCountryView, WorkshopDetailView, WorkshopUpgradeView, UpgradeListCreateView, WorkshopListByCountryAndCharacterView, RecipesInWorkshopView
 from .Views.employee_views import HireNewEmployeeView,EmployeeListAllView, EmployeeListForWorkshopAllView, EmployeeListForCountryAllView,EmployeeListForCountryUnemployedAllView, GiveRecipeToEmployeeView
@@ -13,6 +13,7 @@ from .Views.homepage import Homepage
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("country/", CountryView.as_view(), name='Country'),
+    path("professioninformation/", ProfessionInfromationView.as_view(), name='Profession Information'),
     # Characters
     path("character/", CharacterView.as_view(), name='Character'),
     path("character/<int:countryID>/", CharacterByCountryView.as_view(), name="Character-Country"),

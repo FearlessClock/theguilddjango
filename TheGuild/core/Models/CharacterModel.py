@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 class Character(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    firstName = models.CharField(max_length=200)
+    familyName = models.CharField(max_length=200)
     money = models.IntegerField(default=100)
 
 class Article(models.Model):

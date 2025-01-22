@@ -3,6 +3,7 @@ from rest_framework import serializers
 from ..Models.CountryModel import Country, GridPoint
 from ..Models.CharacterModel import Character
 from ..Models.BuildingModel import Building
+from ..Models.ProfessionInformationModel import ProfessionInformation
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +16,7 @@ class CharacterSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Character
-        fields = ['id', 'country', 'user', 'name', 'money']
+        fields = ['id', 'country', 'user', 'firstName', 'familyName', 'money']
         
 class GridPointSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,3 +30,8 @@ class BuildingSerializer(serializers.ModelSerializer):
         model = Building
         fields = ['id', 'country', 'grid_point', 'type','name']
         
+
+class ProfessionInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfessionInformation
+        fields = ['id', 'name', 'description']

@@ -7,7 +7,7 @@ from TheGuild.core.Models.ProfessionInformationModel import ProfessionInformatio
 from TheGuild.core.Models.WorkshopModel import Workshop, Workshop_Upgrade, Workshop_Recipe
 from TheGuild.core.Models.WorkshopModel import Upgrade
 from TheGuild.core.Models.EmployeeModel import Employee
-from TheGuild.core.Models.GoodsModel import Goods, Recipe, Recipe_Goods
+from TheGuild.core.Models.GoodsModel import ItemInformation, Recipe, Recipe_Goods
 from TheGuild.core.Models.CartModel import Cart
 from TheGuild.core.Models.BuildingModel import Building
 from TheGuild.core.Models.MarketplaceModel import Stall
@@ -70,19 +70,19 @@ def GenerateUpgrades(apps, schema_editor):
 def GenerateGoods(apps, schema_editor):
     data = load_json_data()
     for goods_data in data['goods_data']:
-        if(not Goods.objects.filter(id=goods_data['id'])):
-            Goods.objects.create(id=goods_data['id'],name=goods_data['name'], perlin_noise_seed=goods_data['perlin_noise_seed'], price_min=goods_data['price_min'],price_max=goods_data['price_max'])
+        if(not ItemInformation.objects.filter(id=goods_data['id'])):
+            ItemInformation.objects.create(id=goods_data['id'],name=goods_data['name'], perlin_noise_seed=goods_data['perlin_noise_seed'], price_min=goods_data['price_min'],price_max=goods_data['price_max'])
 
 def GenerateRecipes(apps, schema_editor):
     data = load_json_data()
     for recipe in data['recipes']:
         if(not Recipe.objects.filter(id=recipe['id'])):
             rep = Recipe.objects.create(id=recipe['id'],name=recipe['name'], construction_ticks=recipe['construction_ticks'], 
-                                constructed_goods=Goods.objects.get(id=recipe['constructed_goods']))
+                                constructed_goods=ItemInformation.objects.get(id=recipe['constructed_goods']))
             for req_goods in recipe['required_goods']:
                 Recipe_Goods.objects.create(
                     recipe = rep,
-                    goods = Goods.objects.get(id=req_goods['goods_data_id']),
+                    goods = ItemInformation.objects.get(id=req_goods['goods_data_id']),
                     amount_required = req_goods['amount_required']
                 )
     
@@ -120,7 +120,7 @@ def GenerateWorkshop(apps, schema_editor):
             for goods in json['goods']:
                 Storage_Goods.objects.create(
                     storage = storage,
-                    goods_data = Goods.objects.get(id=goods['id']),
+                    goods_data = ItemInformation.objects.get(id=goods['id']),
                     quantity = goods['quantity']
                 )
                 
@@ -155,7 +155,7 @@ def GenerateStalls(apps, schema_editor):
             for goods in stall['goods']:
                 Storage_Goods.objects.create(
                     storage = storage,
-                    goods_data = Goods.objects.get(id=goods['id']),
+                    goods_data = ItemInformation.objects.get(id=goods['id']),
                     quantity = goods['quantity']
                 )
 

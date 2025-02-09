@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, status
 from ..Models.MarketplaceModel import Stall
 from ..Models.CartModel import Cart
-from ..Models.GoodsModel import Goods
+from ..Models.GoodsModel import ItemInformation
 from ..Models.StorageModel import Storage_Goods, Storage
 from ..Models.CharacterModel import Character
 from rest_framework.views import APIView
@@ -70,7 +70,7 @@ class SellToStall(APIView):
             return Response("Not enough goods to sell", status=status.HTTP_400_BAD_REQUEST)
         
         character = cart.character
-        goods = Goods.objects.get(id=goodsID)
+        goods = ItemInformation.objects.get(id=goodsID)
         price = goods.GetCurrentPrice()
         cart_goods.quantity = cart_goods.quantity - quantity
         character.money += price * quantity

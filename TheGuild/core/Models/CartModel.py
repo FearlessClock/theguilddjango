@@ -1,5 +1,5 @@
 from django.db import models
-from .GoodsModel import Goods
+from .GoodsModel import ItemInformation
 from .CharacterModel import Character
 from .StorageModel import Storage
 from .CountryModel import GridPoint
@@ -10,7 +10,6 @@ from datetime import datetime, UTC
 class Cart(BaseTimeModel):
     type = models.CharField(max_length=20)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
-    storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
     location_type = models.CharField(default="workshop", max_length=20)
     location_id = models.IntegerField(default=0)
     # Movement
@@ -45,4 +44,12 @@ class Cart(BaseTimeModel):
                     self.location_id = building.id
                     self.location_type = building.type
                 self.save()
-        
+                
+# Storage tranfer table for the items inside a cart.
+class Cart_Storage(models.Model):
+    quantity = models.IntegerField(default=0)
+    item_information = models.ForeignKey(ItemInformation, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ('cart', 'item_information')  # Ensure a user cannot add the same item multiple times without updating quantity

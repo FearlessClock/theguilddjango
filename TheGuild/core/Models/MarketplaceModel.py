@@ -6,5 +6,4 @@ from .BaseTimeModel import BaseTimeModel
 
 class Stall(BaseTimeModel):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
     building = models.ForeignKey(Building, on_delete=models.CASCADE)

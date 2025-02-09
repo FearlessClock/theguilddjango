@@ -3,7 +3,7 @@ from noise import pnoise1
 from .BaseTimeModel import BaseTimeModel
 from datetime import datetime, UTC
 
-class Goods(BaseTimeModel):
+class ItemInformation(BaseTimeModel):
     name = models.CharField(max_length=200)
     perlin_noise_seed = models.IntegerField(default=123456789)
     price_min = models.IntegerField(default=10)
@@ -27,11 +27,11 @@ class Goods(BaseTimeModel):
     
 class Recipe(models.Model):
     name = models.CharField(max_length=200)
-    constructed_goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    constructed_item_information = models.ForeignKey(ItemInformation, on_delete=models.CASCADE)
     construction_ticks = models.IntegerField(default=20)
     
 class Recipe_Goods(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    goods = models.ForeignKey(ItemInformation, on_delete=models.CASCADE)
     amount_required = models.IntegerField(default=1)
     

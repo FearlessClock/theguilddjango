@@ -1,6 +1,6 @@
 from django.db import models
 from .CharacterModel import Character
-from .GoodsModel import Goods, Recipe
+from .GoodsModel import ItemInformation, Recipe
 from .StorageModel import Storage
 from .BuildingModel import Building
 from django.contrib.auth.models import User
@@ -18,11 +18,17 @@ class Workshop(BaseTimeModel):
     upgrade = models.ManyToManyField(Upgrade, through="Workshop_Upgrade",
                                               through_fields=("workshop", "upgrade"))
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
-    storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
     recipes = models.ManyToManyField(Recipe, through="Workshop_Recipe", through_fields=("workshop", "recipe"))
     
     def GetWorkshopsForCharacter(character_id):
         return Workshop.objects.filter(character_id=character_id)
+    
+class Workshop_Storage(Storage):
+    item_information = models.ForeignKey(ItemInformation, on_delete=models.CASCADE)
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ('workshop', 'item_information')  # Ensure a user cannot add the same item multiple times without updating quantity
     
 class Workshop_Upgrade(models.Model):
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)

@@ -2,12 +2,12 @@ from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from TheGuild.core.Serializers.cart_serializer import CartSerializer
-from TheGuild.core.Models.CartModel import Cart
+from TheGuild.core.Serializers.cart_serializer import CartSerializer, CartStorageSerializer
+from TheGuild.core.Models.CartModel import Cart, Cart_Storage
 from TheGuild.core.Models.StorageModel import Storage, Storage_Goods
 from TheGuild.core.Models.CharacterModel import Character
 from TheGuild.core.Models.WorkshopModel import Workshop
-from TheGuild.core.Models.GoodsModel import Goods
+from TheGuild.core.Models.GoodsModel import ItemInformation
 from TheGuild.core.Models.CountryModel import GridPoint, Country
 from datetime import datetime, UTC
 
@@ -33,6 +33,11 @@ class CartCountryView(generics.ListAPIView):
                 cart.UpdateCart()
             return queryset
         return None
+    
+class CartStorageView(generics.ListAPIView):
+    permission_classes=[IsAuthenticated]
+    serializer_class=CartStorageSerializer
+    queryset=Cart_Storage.objects.all()
     
 class CartsAtWorkshotView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -93,7 +98,7 @@ class StorageToStorageTransferView(APIView):
         if storage_1_id == storage_2_id:
             return Response("Cannot move goods to same storage", status=status.HTTP_400_BAD_REQUEST)
         
-        if Goods.objects.get(id=goods_id) is None:
+        if ItemInformation.objects.get(id=goods_id) is None:
             return Response("Goods id missing or non existant", status=status.HTTP_400_BAD_REQUEST)
         storage_1 = Storage.objects.get(id=storage_1_id)
         storage_2 = Storage.objects.get(id=storage_2_id)

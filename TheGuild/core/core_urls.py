@@ -4,7 +4,7 @@ from .Views.core_views import CountryView, CharacterView, CharacterByCountryView
 from .Views.building_views import BuildingView, BuildingDetailView, BuildingByCountryView
 from .Views.workshop_views import WorkshopListAllView, WorkshopListByCountryView, WorkshopDetailView, WorkshopUpgradeView, UpgradeListCreateView, WorkshopListByCountryAndCharacterView, RecipesInWorkshopView
 from .Views.employee_views import HireNewEmployeeView,EmployeeListAllView, EmployeeListForWorkshopAllView, EmployeeListForCountryAllView,EmployeeListForCountryUnemployedAllView, GiveRecipeToEmployeeView
-from .Views.cart_views import CartListAllView, CartCountryView,WorkshopToCartTransferView,StorageToStorageTransferView,SetCartInMotion, CartsAtWorkshotView
+from .Views.cart_views import CartListAllView, CartCountryView, CartStorageView,WorkshopToCartTransferView,StorageToStorageTransferView,SetCartInMotion, CartsAtWorkshotView
 from .Views.marketplace_view import StallListAllView, StallListByCountryView, StallDetailView, SellToStall
 from .Views.testView import list_shopping_cart
 from .Views.homepage import Homepage
@@ -22,7 +22,7 @@ urlpatterns = [
     path("workshops/", WorkshopListAllView.as_view(), name="Workshop"),
     path("workshop/<int:pk>/", WorkshopDetailView.as_view(), name="Workshop"),
     path("upgrades/", UpgradeListCreateView.as_view(), name="Upgrades"),
-    path("workshops/<int:countryID>/", WorkshopListByCountryView.as_view(), name="Workshop"),
+    path("workshops/country/<int:countryID>/", WorkshopListByCountryView.as_view(), name="Workshop"),
     path("workshops/character/<int:characterID>/", WorkshopListByCountryAndCharacterView.as_view(), name="Workshop"),
     path("workshop/upgrade/", WorkshopUpgradeView.as_view(),name="Workshop"),
     path("workshop/hire/", HireNewEmployeeView.as_view(),name="Workshop"),
@@ -42,7 +42,7 @@ urlpatterns = [
     path("carts/workshop/<int:workshopID>/", CartsAtWorkshotView.as_view(), name="Carts"),
     path("workshop/cart/transfer/", WorkshopToCartTransferView.as_view(), name="Carts"),
     path("cart/sendtolocation/", SetCartInMotion.as_view(), name="Cart"),
-    
+    path("carts/storage/", CartStorageView.as_view(), name="CartStorage"),
     # Handle storage
     path("movetostorage/", StorageToStorageTransferView.as_view(), name="Storage"),
     path("goodsinstorage/<int:storageID>/", GetAllStoredGoodsView.as_view(), name="Storage"),

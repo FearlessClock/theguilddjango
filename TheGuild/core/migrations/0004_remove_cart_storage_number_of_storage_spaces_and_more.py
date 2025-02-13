@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0003_rename_associated_cart_cart_storage_cart_and_more'),
+        ("core", "0003_rename_associated_cart_cart_storage_cart_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='cart_storage',
-            name='number_of_storage_spaces',
+            model_name="cart_storage",
+            name="number_of_storage_spaces",
         ),
         migrations.RemoveField(
-            model_name='storage_goods',
-            name='number_of_storage_spaces',
+            model_name="storage_goods",
+            name="number_of_storage_spaces",
         ),
     ]

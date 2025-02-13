@@ -7,22 +7,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='workshop',
-            name='name',
+            model_name="workshop",
+            name="name",
         ),
         migrations.RemoveField(
-            model_name='workshop',
-            name='type',
+            model_name="workshop",
+            name="type",
         ),
         migrations.AddField(
-            model_name='workshop',
-            name='building',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='core.building'),
+            model_name="workshop",
+            name="building",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="core.building",
+            ),
             preserve_default=False,
         ),
     ]

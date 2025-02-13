@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_remove_recipe_required_goods'),
+        ("core", "0002_remove_recipe_required_goods"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='upgrade',
-            name='price',
+            model_name="upgrade",
+            name="price",
             field=models.IntegerField(default=0),
         ),
     ]

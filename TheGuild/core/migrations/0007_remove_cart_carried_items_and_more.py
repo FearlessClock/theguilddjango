@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0006_rename_item_information_cart_carried_items'),
+        ("core", "0006_rename_item_information_cart_carried_items"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='cart',
-            name='carried_items',
+            model_name="cart",
+            name="carried_items",
         ),
         migrations.AlterUniqueTogether(
-            name='cart_storage',
-            unique_together={('cart', 'item_information')},
+            name="cart_storage",
+            unique_together={("cart", "item_information")},
         ),
     ]

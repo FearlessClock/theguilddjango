@@ -6,19 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', 'Generate Core data'),
+        ("core", "Generate Core data"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='character',
-            old_name='name',
-            new_name='familyName',
+            model_name="character",
+            old_name="name",
+            new_name="familyName",
         ),
         migrations.AddField(
-            model_name='character',
-            name='firstName',
-            field=models.CharField(default='john', max_length=200),
+            model_name="character",
+            name="firstName",
+            field=models.CharField(default="john", max_length=200),
             preserve_default=False,
         ),
     ]

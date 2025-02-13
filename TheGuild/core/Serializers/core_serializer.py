@@ -5,33 +5,36 @@ from ..Models.CharacterModel import Character
 from ..Models.BuildingModel import Building
 from ..Models.ProfessionInformationModel import ProfessionInformation
 
+
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ['id', 'name', 'tick', 'last_update','start_date', 'tick_in_seconds']
-        
-        
+        fields = ["id", "name", "tick", "last_update", "start_date", "tick_in_seconds"]
+
+
 class CharacterSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.id')
-    
+    user = serializers.ReadOnlyField(source="user.id")
+
     class Meta:
         model = Character
-        fields = ['id', 'country', 'user', 'firstName', 'familyName', 'money']
-        
+        fields = ["id", "country", "user", "firstName", "familyName", "money"]
+
+
 class GridPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = GridPoint
-        fields = ['id', 'country', 'x' ,'y', 'has_building']
-        
-class BuildingSerializer(serializers.ModelSerializer):    
+        fields = ["id", "country", "x", "y", "has_building"]
+
+
+class BuildingSerializer(serializers.ModelSerializer):
     grid_point = GridPointSerializer(many=False)
-    
-    class Meta:  
+
+    class Meta:
         model = Building
-        fields = ['id', 'country', 'grid_point', 'type','name']
-        
+        fields = ["id", "country", "grid_point", "type", "name"]
+
 
 class ProfessionInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfessionInformation
-        fields = ['id', 'name', 'description']
+        fields = ["id", "name", "description"]

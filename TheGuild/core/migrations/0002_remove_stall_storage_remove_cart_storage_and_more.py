@@ -7,53 +7,72 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_rename_name_character_familyname_character_firstname'),
+        ("core", "0001_rename_name_character_familyname_character_firstname"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='stall',
-            name='storage',
+            model_name="stall",
+            name="storage",
         ),
         migrations.RemoveField(
-            model_name='cart',
-            name='storage',
+            model_name="cart",
+            name="storage",
         ),
         migrations.RemoveField(
-            model_name='storage_goods',
-            name='storage',
+            model_name="storage_goods",
+            name="storage",
         ),
         migrations.RemoveField(
-            model_name='workshop',
-            name='storage',
+            model_name="workshop",
+            name="storage",
         ),
         migrations.RemoveField(
-            model_name='storage_goods',
-            name='max_stack_size',
+            model_name="storage_goods",
+            name="max_stack_size",
         ),
         migrations.AddField(
-            model_name='storage_goods',
-            name='number_of_storage_spaces',
+            model_name="storage_goods",
+            name="number_of_storage_spaces",
             field=models.IntegerField(default=1),
         ),
         migrations.RenameModel(
-            old_name='Goods',
-            new_name='ItemInformation',
+            old_name="Goods",
+            new_name="ItemInformation",
         ),
         migrations.CreateModel(
-            name='Cart_Storage',
+            name="Cart_Storage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number_of_storage_spaces', models.IntegerField(default=1)),
-                ('quantity', models.IntegerField(default=0)),
-                ('associated_cart', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.cart')),
-                ('associated_item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.iteminformation')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("number_of_storage_spaces", models.IntegerField(default=1)),
+                ("quantity", models.IntegerField(default=0)),
+                (
+                    "associated_cart",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="core.cart"
+                    ),
+                ),
+                (
+                    "associated_item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="core.iteminformation",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.DeleteModel(
-            name='Storage',
+            name="Storage",
         ),
     ]

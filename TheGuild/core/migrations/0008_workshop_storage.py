@@ -7,20 +7,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0007_remove_cart_carried_items_and_more'),
+        ("core", "0007_remove_cart_carried_items_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Workshop_Storage',
+            name="Workshop_Storage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.IntegerField(default=0)),
-                ('item_information', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.iteminformation')),
-                ('workshop', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.workshop')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.IntegerField(default=0)),
+                (
+                    "item_information",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="core.iteminformation",
+                    ),
+                ),
+                (
+                    "workshop",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="core.workshop"
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('workshop', 'item_information')},
+                "unique_together": {("workshop", "item_information")},
             },
         ),
     ]

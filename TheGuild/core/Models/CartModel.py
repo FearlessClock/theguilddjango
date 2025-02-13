@@ -7,6 +7,7 @@ from .BuildingModel import Building
 from .BaseTimeModel import BaseTimeModel
 from datetime import datetime, UTC
 
+
 class Cart(BaseTimeModel):
     type = models.CharField(max_length=20)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
@@ -21,7 +22,7 @@ class Cart(BaseTimeModel):
     departure_time = models.DateTimeField(null=True)
     is_traveling = models.BooleanField(default=False)
     travel_speed_per_block = models.IntegerField(default=20)
-    
+
     def UpdateCart(self):
         secondsSinceLastUpdate = (datetime.now(UTC) - self.last_update).total_seconds()
         if secondsSinceLastUpdate <= self.tick_in_seconds:
@@ -31,25 +32,33 @@ class Cart(BaseTimeModel):
             return
         progress = (datetime.now(UTC) - self.departure_time).total_seconds()
         if progress >= self.travel_duration_seconds:
-                self.is_traveling = False
-                self.current_x = self.target_x
-                self.current_y = self.target_y
-                
-                gridPoint = GridPoint.objects.get(x=self.current_x, y=self.current_y, country=self.character.country)
-                if not gridPoint.has_building:
-                    self.location_id = -1
-                    self.location_type = ""
-                else:
-                    building = Building.objects.get(grid_point_id=gridPoint.id, country=self.character.country)
-                    self.location_id = building.id
-                    self.location_type = building.type
-                self.save()
-                
+            self.is_traveling = False
+            self.current_x = self.target_x
+            self.current_y = self.target_y
+
+            gridPoint = GridPoint.objects.get(
+                x=self.current_x, y=self.current_y, country=self.character.country
+            )
+            if not gridPoint.has_building:
+                self.location_id = -1
+                self.location_type = ""
+            else:
+                building = Building.objects.get(
+                    grid_point_id=gridPoint.id, country=self.character.country
+                )
+                self.location_id = building.id
+                self.location_type = building.type
+            self.save()
+
+
 # Storage tranfer table for the items inside a cart.
 class Cart_Storage(models.Model):
     quantity = models.IntegerField(default=0)
     item_information = models.ForeignKey(ItemInformation, on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    
+
     class Meta:
-        unique_together = ('cart', 'item_information')  # Ensure a user cannot add the same item multiple times without updating quantity
+        unique_together = (
+            "cart",
+            "item_information",
+        )  # Ensure a user cannot add the same item multiple times without updating quantity

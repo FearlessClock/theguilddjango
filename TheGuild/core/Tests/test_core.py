@@ -10,26 +10,33 @@ class CountryModelTests(TestAuthBase):
         country = Country.objects.create(id=7, name="Spain")
         self.assertIs(country.id, 7)
         self.assertIs(country.name, "Spain")
-        
+
+
 class CharacterModelTests(TestAuthBase):
     user = None
     country = None
-    
+
     def test_create_character(self):
-        char = Character.objects.create(id=5, name="James", user=self.user, country=self.country, money=100)
+        char = Character.objects.create(
+            id=5, name="James", user=self.user, country=self.country, money=100
+        )
         self.assertIs(char.money, 100)
         self.assertIs(char.name, "James")
-        
+
     def test_get_character_by_country(self):
-        Character.objects.create(id=5, name="James", user=self.user, country=self.country, money=100)
+        Character.objects.create(
+            id=5, name="James", user=self.user, country=self.country, money=100
+        )
 
-        resp = self.client.get('/api/character/5/')
+        resp = self.client.get("/api/character/5/")
         self.assertIs(resp.status_code, 200)
-        self.assertIs(resp.json()[0]['id'], 5)
-        
-    def test_get_character_by_country_no_chars(self):
-        Character.objects.create(id=5, name="James", user=self.user, country=self.country, money=100)
+        self.assertIs(resp.json()[0]["id"], 5)
 
-        resp = self.client.get('/api/character/1/')
+    def test_get_character_by_country_no_chars(self):
+        Character.objects.create(
+            id=5, name="James", user=self.user, country=self.country, money=100
+        )
+
+        resp = self.client.get("/api/character/1/")
         self.assertIs(resp.status_code, 200)
         self.assertIs(len(resp.json()), 0)

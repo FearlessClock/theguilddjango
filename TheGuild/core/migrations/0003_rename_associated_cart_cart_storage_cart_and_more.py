@@ -6,23 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_remove_stall_storage_remove_cart_storage_and_more'),
+        ("core", "0002_remove_stall_storage_remove_cart_storage_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='cart_storage',
-            old_name='associated_cart',
-            new_name='cart',
+            model_name="cart_storage",
+            old_name="associated_cart",
+            new_name="cart",
         ),
         migrations.RenameField(
-            model_name='cart_storage',
-            old_name='associated_item',
-            new_name='item_information',
+            model_name="cart_storage",
+            old_name="associated_item",
+            new_name="item_information",
         ),
         migrations.AddField(
-            model_name='cart',
-            name='item_information',
-            field=models.ManyToManyField(through='core.Cart_Storage', to='core.iteminformation'),
+            model_name="cart",
+            name="item_information",
+            field=models.ManyToManyField(
+                through="core.Cart_Storage", to="core.iteminformation"
+            ),
         ),
     ]

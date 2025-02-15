@@ -1,4 +1,6 @@
 from django.db import models
+
+from .ProfessionInformationModel import ProfessionInformation
 from .CharacterModel import Character
 from .GoodsModel import ItemInformation, Recipe
 from .StorageModel import Storage
@@ -16,6 +18,7 @@ class Upgrade(models.Model):
 
 
 class Workshop(BaseTimeModel):
+    name = models.CharField(max_length=200)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     upgrade = models.ManyToManyField(
         Upgrade, through="Workshop_Upgrade", through_fields=("workshop", "upgrade")
@@ -24,6 +27,7 @@ class Workshop(BaseTimeModel):
     recipes = models.ManyToManyField(
         Recipe, through="Workshop_Recipe", through_fields=("workshop", "recipe")
     )
+    profession = models.ForeignKey(ProfessionInformation, on_delete=models.CASCADE)
 
     def GetWorkshopsForCharacter(character_id):
         return Workshop.objects.filter(character_id=character_id)

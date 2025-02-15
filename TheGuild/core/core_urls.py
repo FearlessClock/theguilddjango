@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_framework import routers
 from .Views.core_views import (
     CountryView,
@@ -13,6 +13,8 @@ from .Views.building_views import (
     BuildingByCountryView,
 )
 from .Views.workshop_views import (
+    WorkshopCreationView,
+    WorkshopHandler,
     WorkshopListAllView,
     WorkshopListByCountryView,
     WorkshopDetailView,
@@ -64,7 +66,7 @@ urlpatterns = [
         name="Character-Country",
     ),
     # Workshops
-    path("workshops/", WorkshopListAllView.as_view(), name="Workshop"),
+    path("workshops/", WorkshopHandler.as_view(), name="Workshops"),
     path("workshop/<int:pk>/", WorkshopDetailView.as_view(), name="Workshop"),
     path("upgrades/", UpgradeListCreateView.as_view(), name="Upgrades"),
     path(

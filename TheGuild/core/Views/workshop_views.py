@@ -10,17 +10,31 @@ from TheGuild.core.Models.WorkshopModel import (
 )
 from TheGuild.core.Serializers.WorkshopSerializer import (
     WorkshopSerializer,
+    WorkshopCreationSerializer,
     UpgradeSerializer,
     WorkshopRecipeWithFullRecipeSerializer,
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from TheGuild.core.GameManagement.GameManager import UpdateWorkshop
+from django.views.generic.base import View
+
+class WorkshopHandler(View):
+    def get(self, request, *args, **kwargs):
+        return WorkshopListAllView.as_view()(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        return WorkshopCreationView.as_view()(request, *args, **kwargs)
 
 
-class WorkshopListAllView(generics.ListCreateAPIView):
+class WorkshopListAllView(generics.ListAPIView):
     queryset = Workshop.objects.all()
     serializer_class = WorkshopSerializer
+
+
+class WorkshopCreationView(generics.CreateAPIView):
+    queryset = Workshop.objects.all()
+    serializer_class = WorkshopCreationSerializer
 
 
 class WorkshopListByCountryView(generics.ListAPIView):

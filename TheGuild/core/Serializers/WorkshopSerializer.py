@@ -9,7 +9,7 @@ from TheGuild.core.Serializers.goods_serializer import (
     RecipeSerializer,
     RecipeWithGoodsSerializer,
 )
-from TheGuild.core.Serializers.core_serializer import BuildingSerializer
+from TheGuild.core.Serializers.core_serializer import BuildingSerializer, ProfessionInformationSerializer
 from rest_framework import serializers
 
 
@@ -29,6 +29,7 @@ class WorkshopStorageSerializer(serializers.ModelSerializer):
 
 class WorkshopSerializer(serializers.ModelSerializer):
     building = BuildingSerializer(many=False)
+    profession = ProfessionInformationSerializer(many=False)
     carried_items = WorkshopStorageSerializer(source="workshop_storage_set", many=True)
 
     class Meta:
@@ -37,11 +38,18 @@ class WorkshopSerializer(serializers.ModelSerializer):
             "id",
             "character",
             "building",
+            "profession",
             "carried_items",
             "upgrade",
             "tick",
             "last_update",
         ]
+
+
+class WorkshopCreationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workshop
+        fields = ["name", "character", "profession"]
 
 
 class WorkshopRecipeWithFullRecipeSerializer(serializers.ModelSerializer):

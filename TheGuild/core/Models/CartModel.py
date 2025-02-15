@@ -12,7 +12,7 @@ class Cart(BaseTimeModel):
     type = models.CharField(max_length=20)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     location_type = models.CharField(default="workshop", max_length=20)
-    location_id = models.IntegerField(default=0)
+    current_location = models.ForeignKey(Building, on_delete=models.CASCADE, null=True)
     # Movement
     current_x = models.IntegerField(default=0)
     current_y = models.IntegerField(default=0)

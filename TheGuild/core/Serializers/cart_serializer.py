@@ -23,7 +23,7 @@ class CartSerializer(serializers.ModelSerializer):
             "character",
             "carried_items",
             "location_type",
-            "location_id",
+            "current_location",
             "current_x",
             "current_y",
             "target_x",
